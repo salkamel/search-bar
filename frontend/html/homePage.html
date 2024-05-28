@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Group Tracker</title>
+    <link rel="icon" type="image/x-icon" href="https://icons.iconarchive.com/icons/wwalczyszyn/iwindows/256/Music-Library-icon.png">
+    <script src="/frontend/functions.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #e3e3e3;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .artist-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .artist-card form {
+            margin-top: 10px;
+        }
+        .artist-card input[type=submit] {
+            border: none;
+            outline: none;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .artist-card input[type=submit]:hover {
+            background-color: #00ff2a;
+        }
+        .artist-card pre {
+            background-color: #f9f9f9;
+            border-left: 3px solid #333;
+            margin: 10px 0;
+            padding: 5px;
+        }
+        .artist-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin: 10px;
+            padding: 20px;
+            width: calc(33% - 20px);
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .artist-card:active {
+            transform: scale(1.02);
+            background-color: #f0f0f0;
+        }
+        @media screen and (max-width: 767px) {
+            .artist-card {
+                width: 100%;
+            }
+        }
+        #SearchBar, .SearchBarLabel {
+            font-family: arial,sans-serif;
+            line-height: 22px;
+            overflow-x: hidden;
+            resize: none;
+            word-wrap: break-word;
+            border-radius: 8px;
+            font-size: 20px;
+            width: 300px;
+        }
+        .SearchBarLabel{
+            font-weight: bold; /*top: -5px; position: relative;*/
+        }
+        #suggestions > * {
+            display: block;
+        }
+        #suggestions {
+            text-align: center;
+            width: 310px;
+            max-block-size: 200px;
+            overflow-y: auto;
+            background-color: white;
+            border-radius: 10px;
+            position: absolute;
+            transform: translate(-59%);
+            z-index: 1;
+            margin: 0 50%;
+        }
+        a:hover {
+            font-weight: bold
+        }
+
+        table {
+            border-collapse: collapse; /* Optional: Merge adjacent borders into a single border */
+        }
+        td,th {
+            border-right: 1px solid #00000030; /* Add a vertical line to the right of each cell */
+            padding: 2px; /* Optional: Add padding to the cells for spacing */
+        }
+        td:last-child,th:last-child {
+            border-right: none; /* Remove the border on the last cell to avoid a trailing line */
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Welcome to Groupie Tracker</h1>
+    <div id="SearchBarDiv" style="text-align: center;">
+        <input type="text" id="SearchBar" placeholder="Enter your search query" list="suggestions" autofocus="">
+        <div id="suggestions"></div>
+        <script type="text/javascript"> searchBarFunction({{ . }}) </script>
+        <button id="searchButton" onclick="performSearch()">Search</button>
+    </div>
+    <!-- <div id="Filtersdiv" style="text-align: center;width: max-content;margin: 10px auto -15px auto;background-color: #00000020;border-radius: 5px;padding: 10px;">
+        <h3 style="margin: -7px auto auto auto;">Filters</h3>
+        <table><tr>
+                <th>Creation Date</th>
+                <th>First Album Date</th>
+            </tr>
+            <tr>
+                <td>
+                    <input type="number" id="CreationDateFrom" placeholder="From Year (yyyy)" min="1958" max="2015"></input>
+                    <input type="number" id="CreationDateTo"   placeholder="To Year (yyyy)"   min="1958" max="2015"></input>
+                    <script type="text/javascript">
+                        document.getElementById("CreationDateFrom").addEventListener("input", function() {
+                            if (this.value > document.getElementById("CreationDateTo").value || this.value == "") {
+                                document.getElementById("CreationDateTo").value = this.value
+                            }
+                            generateArtistCards(this.value,document.getElementById("CreationDateTo").value)
+                        })
+                        document.getElementById("CreationDateTo").addEventListener("input", function() {
+                            if (this.value < document.getElementById("CreationDateFrom").value || document.getElementById("CreationDateFrom").value == "") {
+                                document.getElementById("CreationDateFrom").value = this.value
+                            }
+                            generateArtistCards(document.getElementById("CreationDateFrom").value, this.value)
+                        })
+                    </script>
+                </td>
+                <td>
+                    <input type="text" id="firstAlbumFrom" placeholder="First Album from date" oninput="showSuggestionsfirstAlbumFrom()">
+                    <ul id="suggestions_firstAlbumFrom"></ul>
+                    <script type="text/javascript">
+                        var suggestions = []
+                        var artists = {{ . }}
+                        artists.forEach(function(artist) {
+                            suggestions.push(artist.name + " - " + artist.firstAlbum);
+                        });
+                        function showSuggestionsfirstAlbumFrom() {
+                            var input = document.getElementById("firstAlbumFrom").value;
+                            var suggestionsList = document.getElementById("suggestions_firstAlbumFrom");
+                            // Clear previous suggestions
+                            suggestionsList.innerHTML = "";
+                            // Filter suggestions based on input value
+                            var filteredSuggestions = suggestions.filter(function(suggestion) {
+                                return suggestion.toLowerCase().includes(input.toLowerCase());
+                            });
+                            // Display filtered suggestions
+                            filteredSuggestions.forEach(function(suggestion) {
+                                var li = document.createElement("li");
+                                li.textContent = suggestion;
+                                suggestionsList.appendChild(li);
+                            });
+                        }
+                    </script>
+                </td>
+            </tr></table>
+    </div> -->
+    <div class="container" id="artist-container">
+        <!-- Artists will be dynamically added here -->
+    </div>
+    <script>
+        var artists = {{ . }} // Retrieve the artists data from the embedded value
+        function performSearch() {
+            generateArtistCards(document.getElementById("SearchBar").value.toLowerCase())
+        }
+        document.getElementById("SearchBar").addEventListener("keydown", performSearchKeydown); function performSearchKeydown(event) { if (event.key === "Enter") { event.preventDefault(); performSearch(); }}
+        function generateArtistCards(searchTerm="",CreationDateFrom="",CreationDateTo="") { // Function to generate the artist cards dynamically
+            var container = document.getElementById("artist-container");
+            container.innerHTML = ""
+            artists.forEach(function(artist) {
+                if (searchTerm != "" && !artist.name.toLowerCase().includes(searchTerm) && !artist.firstAlbum.toLowerCase().includes(searchTerm) && !artist.creationDate.toString().includes(searchTerm)) {
+                    var membersFoundCount = 0
+                    artist.members.forEach(function(member) {
+                        if (member.toLowerCase().includes(searchTerm)) {membersFoundCount++}
+                    })
+                    var locationsFoundCount = 0
+                    artist.LocationData.locations.forEach(function(location) {
+                        if (location.toLowerCase().includes(searchTerm)) {locationsFoundCount++}
+                    })
+                    var firstAlbumFoundCount = 0
+                    if (!membersFoundCount & !locationsFoundCount) {return}
+                }
+                // if (parseInt(artist.creationDate) < parseInt(CreationDateFrom) || parseInt(artist.creationDate) >  parseInt(CreationDateTo)) {return}
+
+                var artistCard = document.createElement("a");
+                artistCard.setAttribute("artistid",artist.id)
+                artistCard.setAttribute("href","artistid/"+artist.id)
+                artistCard.classList.add("artist-card");
+                artistCard.addEventListener("mouseover", function() {
+                    elements4boxshadowHover(document.querySelectorAll(".artist-card"),this);
+                });
+
+                var artistImage = document.createElement("img");
+                artistImage.src = artist.image.replace("https://groupietrackers.herokuapp.com/api/images/mamonasassassinas.jpeg","https://i.ibb.co/qgNvL6p/Mamonas-assassinas-240x240.jpg");
+                artistCard.appendChild(artistImage);
+
+                var artistName = document.createElement("h3");
+                artistName.textContent = artist.name
+                artistName.classList.add("artist-name");
+                artistCard.appendChild(artistName);
+
+                // if (CreationDateFrom) {
+                //     var artistName = document.createElement("div");
+                //     artistName.textContent = "Creation Date: " + artist.creationDate
+                //     artistName.classList.add("artist-filtered1");
+                //     artistCard.appendChild(artistName)
+                // }
+                container.appendChild(artistCard);
+            });
+            // function checkDuplicates(artists) {
+            //     const names = artists.map(artist => artist.name);
+            //     const uniqueNames = new Set(names);
+            //     if (names.length !== uniqueNames.size) {
+            //         return true; // Duplicates found
+            //     }
+            //     return false; // No duplicates found
+            // }; const hasDuplicates = checkDuplicates(artists); console.log("artist.name dublicate = " + hasDuplicates);
+            if (!document.querySelectorAll("#artist-container > a").length && document.getElementById("SearchBar").value) document.getElementById("artist-container").innerHTML = "<p id='NoResults404'>404 - No results found</p>";
+        }
+        // Call the function to generate the artist cards
+        generateArtistCards();
+    </script>
+    <footer>
+        <hr>
+        <p style="margin-left:40px;"><strong>Developed by:</strong><br>&nbsp; Jasim Aldallal<br>&nbsp; Mohammed AlYousif<br>&nbsp; Sayed Hameed Alkamel</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Artist</title>
+    <link rel="icon" type="image/x-icon" href="https://icons.iconarchive.com/icons/wwalczyszyn/iwindows/256/Music-Library-icon.png">
+    <style> 
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .artist-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin: 10px;
+            padding: 20px;
+            width: calc(33% - 20px);
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .artist-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .artist-card p {
+            background-color: #f9f9f9;
+            border-left: 3px solid #333;
+            margin: 10px 0;
+            padding: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        tr:nth-child(even){background-color: #f9f9f9}
+
+        button:hover {
+            background-color: #00ff2a;
+
+        }
+        button {
+            border: none;
+            outline: none;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        /* img[src*="mamonasassassinas"] {
+            filter: blur(20px);
+        } */
+    </style>
+</head>
+<body>
+    <center>
+    <div class="artist-card"  style="width: auto;max-width: 600px;">
+        <img src="{{if ne .ID 21}}{{.Image}}{{else}}https://i.ibb.co/qgNvL6p/Mamonas-assassinas-240x240.jpg{{end}}" alt="{{.Name}}" class="artist-image">
+        <p><strong>Name: {{ .Name }}</strong></p>
+        <p><strong>Members:</strong></p>
+        <p>
+            {{ range .Members }}
+            {{ . }}
+            <br>
+            {{ end }}
+        </p>
+        <p><strong>Creation Date: {{ .CreationDate }}</strong></p>
+        <p><strong>First Album: {{ .FirstAlbum }}</strong></p>
+
+        <p><strong>Relations:</strong></p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Location</th>
+                    <th>Date(s)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range $location, $dates := .RelationData.DatesLocation }}
+                <tr>
+                    <td>{{ $location }}</td>
+                    <td>
+                        {{ range $dates }}
+                        <div>{{ . }}</div>
+                        {{ end }}
+                    </td>
+                </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    </div>
+    <button onclick="window.location.href = '/'">Go Back to Homepage</button>
+    </center>
+</body>
+</html>
